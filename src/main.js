@@ -12,14 +12,14 @@ const matches = { };
 
 const matchMaking = (type, sock) => {
   const socket = sock;
-  
+
 
   console.log(`User${socket.hash} has joined matchmaking: type ${type}.`);
-  
-  switch(type) {
-      
+
+  switch (type) {
+
     default:
-    case 'random': 
+    case 'random': {
       let inMatch = false;
       const matchKeys = Object.keys(matches);
 
@@ -30,7 +30,7 @@ const matchMaking = (type, sock) => {
         if (c < 2) {
           M.addPlayer(socket);
           console.log(`Adding ${socket.player.name} to Match${M.hash}.`);
-          
+
           inMatch = true;
           break;
         }
@@ -46,14 +46,14 @@ const matchMaking = (type, sock) => {
         M.addPlayer(socket);
       }
       break;
-      
+    }
   }
 };
 
 const onJoined = (sock) => {
   const socket = sock;
 
-  socket.on('join', (m) => {
+  socket.on('join', () => {
     const hash = xxh.h32(`${socket.id}${new Date().getTime()}`, 0xCAFEBABE).toString(16);
     socket.hash = hash;
 
@@ -65,76 +65,71 @@ const onJoined = (sock) => {
     console.log(`User${hash} has joined the server.`);
 
     users[hash] = socket;
-
   });
 };
 
 const onLeave = (sock) => {
   const socket = sock;
 
-  socket.on('leave', (m) => {
-
+  socket.on('leave', () => {
     if (matches[socket.player.curRoom]) {
       const M = matches[socket.player.curRoom];
-      
+
       M.removePlayer(socket);
 
       console.log(`User${socket.hash} has left matchmaking.`);
-      
+
       if (M.count() === 0) {
         M.destructor();
         console.log(`Deleting Match${M.hash}.`);
-        
+
         delete matches[M.hash];
       }
     }
-    
   });
 };
 
 const onDisconnect = (sock) => {
   const socket = sock;
 
-  socket.on('disconnect', (m) => {
-
+  socket.on('disconnect', () => {
     if (matches[socket.player.curRoom]) {
       const M = matches[socket.player.curRoom];
-      
+
       M.removePlayer(socket);
 
       console.log(`User${socket.hash} has left matchmaking.`);
-      
+
       if (M.count() === 0) {
         M.destructor();
         console.log(`Deleting Match${M.hash}.`);
-        
+
         delete matches[M.hash];
       }
     }
-    
+
     delete users[socket.hash];
-    
   });
 };
 
 
-const onEnter = (sock) => {
-  const socket = sock;
-
-  socket.on('enterShop', (m) => {
-
-
-  });
-};
-
-const onDeal = (sock) => {
-  const socket = sock;
-
-  socket.on('deal', (m) => {
-
-
-  });
-};
+// const onEnter = (sock) => {
+//  const socket = sock;
+//
+//  socket.on('enterShop', (m) => {
+//
+//
+//  });
+// };
+//
+// const onDeal = (sock) => {
+//  const socket = sock;
+//
+//  socket.on('deal', (m) => {
+//
+//
+//  });
+// };
 
 
 const onMatch = (sock) => {
@@ -155,34 +150,33 @@ const onMatch = (sock) => {
 
 const onLeaveMatch = (sock) => {
   const socket = sock;
-  
-  socket.on('leaveMatch', (m) => {
-    
+
+  socket.on('leaveMatch', () => {
     if (matches[socket.player.curRoom]) {
       const M = matches[socket.player.curRoom];
-      
+
       M.removePlayer(socket);
 
       console.log(`User${socket.hash} has left matchmaking.`);
-      
+
       if (M.count() === 0) {
         M.destructor();
         console.log(`Deleting Match${M.hash}.`);
-        
+
         delete matches[M.hash];
       }
     }
   });
-}
-
-const onInput = (sock) => {
-  const socket = sock;
-
-  socket.on('inputSent', (m) => {
-
-
-  });
 };
+
+// const onInput = (sock) => {
+//  const socket = sock;
+//
+//  socket.on('inputSent', (m) => {
+//
+//
+//  });
+// };
 
 
 let lastTime = new Date().getTime();
@@ -191,25 +185,23 @@ let dT = lastTime;
 
 // Main server loop
 const update = () => {
-  
   const curTime = new Date().getTime();
   dT = (curTime - lastTime) * 0.001;
   lastTime = curTime;
-  
+
   const matchKeys = Object.keys(matches);
 
   for (let i = 0; i < matchKeys.length; i++) {
     const M = matches[matchKeys[i]];
-    
+
     const matchEnded = M.updateMatch(dT);
-    
+
     if (matchEnded) {
       M.destructor();
 
       delete matches[matchKeys[i]];
     }
   }
-  
 };
 
 // Main server init
@@ -230,18 +222,18 @@ const startServer = (ioServer) => {
     onDisconnect(socket);
 
 
-    onEnter(socket);
-    onDeal(socket);
+    // onEnter(socket);
+    // onDeal(socket);
 
 
     onMatch(socket);
     onLeaveMatch(socket);
-    onInput(socket);
+    // onInput(socket);
 
     console.log('User connected');
   });
-  
-  
+
+
   setInterval(update, 16);
 };
 
