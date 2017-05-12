@@ -72,7 +72,7 @@ const onLeave = (sock) => {
   const socket = sock;
 
   socket.on('leave', () => {
-    if (matches[socket.player.curRoom]) {
+    if (socket.player && matches[socket.player.curRoom]) {
       const M = matches[socket.player.curRoom];
 
       M.removePlayer(socket);
