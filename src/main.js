@@ -93,7 +93,7 @@ const onDisconnect = (sock) => {
   const socket = sock;
 
   socket.on('disconnect', () => {
-    if (matches[socket.player.curRoom]) {
+    if (socket.player && matches[socket.player.curRoom]) {
       const M = matches[socket.player.curRoom];
 
       M.removePlayer(socket);
@@ -169,14 +169,16 @@ const onLeaveMatch = (sock) => {
   });
 };
 
-// const onInput = (sock) => {
-//  const socket = sock;
-//
-//  socket.on('inputSent', (m) => {
-//
-//
-//  });
-// };
+const onInput = (sock) => {
+  const socket = sock;
+
+  socket.on('inputSent', (m) => {
+    if (socket.player.curRoom) {
+      // console.dir(m.data);
+      matches[socket.player.curRoom].updateInput(socket.player.hash, m.data);
+    }
+  });
+};
 
 
 let lastTime = new Date().getTime();
@@ -193,10 +195,9 @@ const update = () => {
 
   for (let i = 0; i < matchKeys.length; i++) {
     const M = matches[matchKeys[i]];
+    const matchRunning = M.updateMatch(dT);
 
-    const matchEnded = M.updateMatch(dT);
-
-    if (matchEnded) {
+    if (!matchRunning) {
       M.destructor();
 
       delete matches[matchKeys[i]];
@@ -228,7 +229,7 @@ const startServer = (ioServer) => {
 
     onMatch(socket);
     onLeaveMatch(socket);
-    // onInput(socket);
+    onInput(socket);
 
     console.log('User connected');
   });

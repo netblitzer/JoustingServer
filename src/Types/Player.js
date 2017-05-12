@@ -7,48 +7,71 @@ class Player {
     this.curRoom = undefined;
     this.inMatch = false;
 
-    this.pos = {
-      x: 0,
-      y: 0,
+    this.data = {
+      ax: 5000,
+      bx: 5000,
+      cx: 5000,
+      velocity: 0,
+
+      lanceDropProgress: 0,
+      lanceProgress: 0,
+      boostProgress: 0,
+      boosting: false,
+
+      animation: 'standing',
+      falling: false,
+      shieldUp: false,
+      lanceDown: false,
+
     };
-    this.velocity = 0;
-    this.acceleration = 0;
-    this.direction = 'right';
+
+    this.lanceReady = false;
+    this.lanceState = 'ready';
+    this.lanceCharge = 0;
+    this.lanceHoldTime = 0;
+
+
+    this.maxSpeed = 1000;
+    this.minSpeed = 250;
+
+    this.acceleratingTime = 0;
+    this.acceleratingTotalTime = 0.5;
 
     this.input = {
-      boosting: false,
-      charging: false,
+      boost: false,
+      lance: false,
       shield: false,
     };
-
-    this.shieldUp = false;
-    this.lanceDown = false;
-
-    this.lanceDropProgress = 0;
-    this.lanceProgress = 0;
-    this.boostProgress = 0;
   }
 
   reset() {
-    this.pos = {
-      x: 0,
-      y: 0,
+    this.data = {
+      ax: 5000,
+      bx: 5000,
+      cx: 5000,
+      velocity: 0,
+      lanceDropProgress: 0,
+      lanceProgress: 0,
+      boostProgress: 0,
+      animation: 'standing',
+      falling: false,
+      shieldUp: false,
+      lanceDown: false,
     };
-    this.velocity = 0;
-    this.acceleration = 0;
+
+    this.lanceReady = false;
+    this.lanceState = 'ready';
+    this.lanceCharge = 0;
+    this.lanceHoldTime = 0;
+
+
+    this.acceleratingTime = 1;
 
     this.movement = {
-      boosting: false,
-      charging: false,
+      boost: false,
+      lance: false,
       shield: false,
     };
-
-    this.shieldUp = false;
-    this.lanceDown = false;
-
-    this.lanceDropProgress = 0;
-    this.lanceProgress = 0;
-    this.boostProgress = 0;
   }
 
 }

@@ -3,29 +3,27 @@
   "version": "0.0.1",
   "description": "A 2D Electon game rendered using PIXI.js. This is the server client.",
   "main": "./server/app.js",
+  "author": "Luke Miller",
+  "license": "ISC",
   "scripts": {
     "nodemon": "nodemon --watch ./src ./src/app.js",
     "start": "node ./src/app.js",
     "pretest": "eslint ./src --fix",
     "test": "echo \"Tests complete\""
   },
-  "author": "Luke Miller",
-  "license": "ISC",
   "dependencies": {
     "express": "^4.15.2",
     "socket.io": "^1.4.8",
     "xxhashjs": "^0.2.1"
   },
   "devDependencies": {
-    "babel-cli": "^6.18.0",
-    "babel-preset-env": "^1.1.8",
-    "eslint": "^3.0.0",
-    "eslint-config-airbnb": "^9.0.1",
-    "eslint-plugin-import": "^1.10.1",
+    "eslint": "^3.1.19",
+    "eslint-config-airbnb": "^14.1.0",
+    "eslint-plugin-import": "^2.2.0",
     "nodemon": "^1.11.0"
   },
   "engines": {
-    "node": "7.5.0",
-    "npm": "4.0.5"
+    "node": "7.10.0",
+    "npm": "4.5.0"
   }
 }
